@@ -65,6 +65,9 @@ export default function App() {
               secondary: "black",
             },
           },
+          error: {
+            duration: 5000,
+          },
         }}
       />
     </QueryClientProvider>
