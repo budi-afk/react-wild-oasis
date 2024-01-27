@@ -30,7 +30,7 @@ const TableHeader = styled.header`
 
 export default function CabinTable() {
   const { isLoading, data, error } = useQuery({
-    queryKey: ["cabin"],
+    queryKey: ["cabins"],
     queryFn: getCabins,
   });
 
