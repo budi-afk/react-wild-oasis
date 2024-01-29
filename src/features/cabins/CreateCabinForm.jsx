@@ -49,7 +49,7 @@ const Error = styled.span`
 function CreateCabinForm() {
   const queryClient = useQueryClient();
 
-  const { isLoding: isCreating, mutate } = useMutation({
+  const { isLoading: isCreating, mutate } = useMutation({
     mutationFn: createCabin,
     onSuccess: () => {
       toast.success("Cabin successfully created");
@@ -61,24 +61,58 @@ function CreateCabinForm() {
     onError: (err) => toast.error(err.message),
   });
 
-  const { register, handleSubmit } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    getValues,
+  } = useForm();
   const onSubmit = (data) => mutate(data);
 
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
       <FormRow>
         <Label htmlFor="name">Cabin name</Label>
-        <Input type="text" id="name" {...register("name")} />
+        <Input
+          type="text"
+          id="name"
+          placeholder="Cabin name"
+          {...register("name", {
+            required: "Cabin name is required",
+          })}
+          aria-invalid={errors?.name ? "true" : "false"}
+        />
+        {errors?.name && <Error>{errors.name.message}</Error>}
       </FormRow>
 
       <FormRow>
         <Label htmlFor="maxCapacity">Maximum capacity</Label>
-        <Input type="number" id="maxCapacity" {...register("maxCapacity")} />
+        <Input
+          type="number"
+          id="maxCapacity"
+          {...register("maxCapacity", {
+            required: "Maximum capacity is required",
+            min: {
+              value: 1,
+              message: "Value cannot be 0 or less",
+            },
+          })}
+          aria-invalid={errors?.maxCapacity ? "true" : "false"}
+        />
+        {errors?.maxCapacity && <Error>{errors.maxCapacity.message}</Error>}
       </FormRow>
 
       <FormRow>
         <Label htmlFor="regularPrice">Regular price</Label>
-        <Input type="number" id="regularPrice" {...register("regularPrice")} />
+        <Input
+          type="number"
+          id="regularPrice"
+          {...register("regularPrice", {
+            required: "Regular price is required",
+            min: { value: 1, message: "Value cannot be 0 or less" },
+          })}
+        />
+        {errors?.regularPrice && <Error>{errors.regularPrice.message}</Error>}
       </FormRow>
 
       <FormRow>
@@ -87,8 +121,14 @@ function CreateCabinForm() {
           type="number"
           id="discount"
           defaultValue={0}
-          {...register("discount")}
+          {...register("discount", {
+            min: { value: 0, message: "The value cannot be negative" },
+            validate: (value) =>
+              value <= Number(getValues().regularPrice) ||
+              "the discount cannot be more than regular price",
+          })}
         />
+        {errors?.discount && <Error>{errors.discount.message}</Error>}
       </FormRow>
 
       <FormRow>
@@ -96,9 +136,11 @@ function CreateCabinForm() {
         <Textarea
           type="number"
           id="description"
+          placeholder="Description"
           defaultValue=""
-          {...register("description")}
+          {...register("description", { required: "Description is required" })}
         />
+        {errors?.description && <Error>{errors.description.message}</Error>}
       </FormRow>
 
       <FormRow>
