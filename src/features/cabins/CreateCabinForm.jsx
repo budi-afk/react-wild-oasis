@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
 
+import FormRow from "../../ui/FormRow";
 import Input from "../../ui/Input";
 import Form from "../../ui/Form";
 import Button from "../../ui/Button";
@@ -9,42 +10,6 @@ import Textarea from "../../ui/Textarea";
 
 import { useCreateCabin } from "./useCreateCabin";
 import { useUpdateCabin } from "./useUpdateCabin";
-
-const FormRow = styled.div`
-  display: grid;
-  align-items: center;
-  grid-template-columns: 24rem 1fr 1.2fr;
-  gap: 2.4rem;
-
-  padding: 1.2rem 0;
-
-  &:first-child {
-    padding-top: 0;
-  }
-
-  &:last-child {
-    padding-bottom: 0;
-  }
-
-  &:not(:last-child) {
-    border-bottom: 1px solid var(--color-grey-100);
-  }
-
-  &:has(button) {
-    display: flex;
-    justify-content: flex-end;
-    gap: 1.2rem;
-  }
-`;
-
-const Label = styled.label`
-  font-weight: 500;
-`;
-
-const Error = styled.span`
-  font-size: 1.4rem;
-  color: var(--color-red-700);
-`;
 
 function CreateCabinForm({ cabinToEdit = {} }) {
   const { isCreating, createCabin } = useCreateCabin();
@@ -85,8 +50,7 @@ function CreateCabinForm({ cabinToEdit = {} }) {
 
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
-      <FormRow>
-        <Label htmlFor="name">Cabin name</Label>
+      <FormRow label="Cabin name" errors={errors?.name}>
         <Input
           disabled={isWorking}
           type="text"
@@ -97,11 +61,9 @@ function CreateCabinForm({ cabinToEdit = {} }) {
           })}
           aria-invalid={errors?.name ? "true" : "false"}
         />
-        {errors?.name && <Error>{errors.name.message}</Error>}
       </FormRow>
 
-      <FormRow>
-        <Label htmlFor="maxCapacity">Maximum capacity</Label>
+      <FormRow label="Maximum capacity" errors={errors?.maxCapacity}>
         <Input
           disabled={isWorking}
           type="number"
@@ -115,11 +77,9 @@ function CreateCabinForm({ cabinToEdit = {} }) {
           })}
           aria-invalid={errors?.maxCapacity ? "true" : "false"}
         />
-        {errors?.maxCapacity && <Error>{errors.maxCapacity.message}</Error>}
       </FormRow>
 
-      <FormRow>
-        <Label htmlFor="regularPrice">Regular price</Label>
+      <FormRow label="Regular price" errors={errors?.regularPrice}>
         <Input
           disabled={isWorking}
           type="number"
@@ -128,12 +88,11 @@ function CreateCabinForm({ cabinToEdit = {} }) {
             required: "Regular price is required",
             min: { value: 1, message: "Value cannot be 0 or less" },
           })}
+          aria-invalid={errors?.regularPrice ? "true" : "false"}
         />
-        {errors?.regularPrice && <Error>{errors.regularPrice.message}</Error>}
       </FormRow>
 
-      <FormRow>
-        <Label htmlFor="discount">Discount</Label>
+      <FormRow label="discount" errors={errors?.discount}>
         <Input
           disabled={isWorking}
           type="number"
@@ -145,12 +104,11 @@ function CreateCabinForm({ cabinToEdit = {} }) {
               value <= Number(getValues().regularPrice) ||
               "The discount cannot be more than regular price",
           })}
+          aria-invalid={errors?.discount ? "true" : "false"}
         />
-        {errors?.discount && <Error>{errors.discount.message}</Error>}
       </FormRow>
 
-      <FormRow>
-        <Label htmlFor="description">Description for website</Label>
+      <FormRow label="Description" errors={errors?.description}>
         <Textarea
           disabled={isWorking}
           type="number"
@@ -158,12 +116,11 @@ function CreateCabinForm({ cabinToEdit = {} }) {
           placeholder="Description"
           defaultValue=""
           {...register("description", { required: "Description is required" })}
+          aria-invalid={errors?.description ? "true" : "false"}
         />
-        {errors?.description && <Error>{errors.description.message}</Error>}
       </FormRow>
 
-      <FormRow>
-        <Label htmlFor="image">Cabin photo</Label>
+      <FormRow label="Cabin image" errors={errors?.image}>
         <FileInput
           disabled={isWorking}
           id="image"
@@ -171,8 +128,8 @@ function CreateCabinForm({ cabinToEdit = {} }) {
           {...register("image", {
             required: isEditSession ? false : "Cabin photo is required",
           })}
+          aria-invalid={errors?.image ? "true" : "false"}
         />
-        {errors?.image && <Error>{errors.image.message}</Error>}
       </FormRow>
 
       <FormRow>

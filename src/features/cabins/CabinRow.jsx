@@ -105,7 +105,9 @@ export default function CabinRow({ cabin }) {
               sizes="small"
               variations="danger"
               disabled={isDeleting}
-              onClick={() => deleteCabin(cabinId)}
+              onClick={() =>
+                confirm(`Delete cabin ${name} ?`) ? deleteCabin(cabinId) : null
+              }
             >
               <HiTrash />
             </Button>
