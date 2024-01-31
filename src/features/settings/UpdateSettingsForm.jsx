@@ -1,12 +1,12 @@
 import Form from "../../ui/Form";
 import FormRow from "../../ui/FormRow";
 import Input from "../../ui/Input";
-import Spinner from "../../ui/Spinner";
+import Button from "../../ui/Button";
+import { useUpdateSetting } from "./useUpdateSetting";
+import { useForm } from "react-hook-form";
 
-import { useSetting } from "./useSetting";
-
-function UpdateSettingsForm() {
-  const { isLoading, settings = {} } = useSetting();
+function UpdateSettingsForm({ settings = {} }) {
+  const { isUpdating, updateSetting } = useUpdateSetting();
   const {
     minBookingLength,
     maxBookingLength,
@@ -14,37 +14,88 @@ function UpdateSettingsForm() {
     breakfastPrice,
   } = settings;
 
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    defaultValues: settings,
+  });
+
+  const onSubmit = (data) => {
+    updateSetting(data);
+  };
+
   return (
     <>
-      {isLoading && <Spinner />}
-      <Form>
-        <FormRow label="Minimum nights/booking">
+      <Form onSubmit={handleSubmit(onSubmit)}>
+        <FormRow
+          label="Minimum nights/booking"
+          errors={errors?.minBookingLength}
+        >
           <Input
-            defaultValue={minBookingLength}
+            disabled={isUpdating}
             type="number"
-            id="min-nights"
+            id="minBookingLength"
+            {...register("minBookingLength", {
+              required: "Minimum Booking required",
+              min: {
+                value: 1,
+                message: "Value cannot be 0 or less",
+              },
+            })}
           />
         </FormRow>
-        <FormRow label="Maximum nights/booking">
+        <FormRow
+          label="Maximum nights/booking"
+          errors={errors?.maxBookingLength}
+        >
           <Input
-            defaultValue={maxBookingLength}
+            disabled={isUpdating}
             type="number"
-            id="max-nights"
+            id="maxBookingLength"
+            {...register("maxBookingLength", {
+              required: "Maximum Booking required",
+              min: {
+                value: 1,
+                message: "Value cannot be 0 or less",
+              },
+            })}
           />
         </FormRow>
-        <FormRow label="Maximum guests/booking">
+        <FormRow
+          label="Maximum guests/booking"
+          errors={errors?.maxGuestPerBooking}
+        >
           <Input
-            defaultValue={maxGuestPerBooking}
+            disabled={isUpdating}
             type="number"
-            id="max-guests"
+            id="maxGuestPerBooking"
+            {...register("maxGuestPerBooking", {
+              required: "Maximum guests required",
+              min: {
+                value: 1,
+                message: "Value cannot be 0 or less",
+              },
+            })}
           />
         </FormRow>
-        <FormRow label="Breakfast price">
+        <FormRow label="Breakfast price" errors={errors?.breakfastPrice}>
           <Input
-            defaultValue={breakfastPrice}
+            disabled={isUpdating}
             type="number"
-            id="breakfast-price"
+            id="breakfastPrice"
+            {...register("breakfastPrice", {
+              required: "Breakfast required",
+              min: {
+                value: 1,
+                message: "Value cannot be 0 or less",
+              },
+            })}
           />
+        </FormRow>
+        <FormRow>
+          <Button disabled={isUpdating}>Update settings</Button>
         </FormRow>
       </Form>
     </>
