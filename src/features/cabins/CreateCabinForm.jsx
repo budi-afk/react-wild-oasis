@@ -1,4 +1,3 @@
-import styled from "styled-components";
 import { useForm } from "react-hook-form";
 
 import FormRow from "../../ui/FormRow";
@@ -11,7 +10,7 @@ import Textarea from "../../ui/Textarea";
 import { useCreateCabin } from "./useCreateCabin";
 import { useUpdateCabin } from "./useUpdateCabin";
 
-function CreateCabinForm({ cabinToEdit = {} }) {
+function CreateCabinForm({ cabinToEdit = {}, onClose }) {
   const { isCreating, createCabin } = useCreateCabin();
   const { isUpdating, updateCabin } = useUpdateCabin();
 
@@ -35,13 +34,14 @@ function CreateCabinForm({ cabinToEdit = {} }) {
 
     if (isEditSession) {
       updateCabin({ newCabinData: { ...data, image }, id: editId });
+      onClose?.();
     } else {
       createCabin(
         { ...data, image },
         {
-          onSuccess: (data) => {
-            console.log(data);
+          onSuccess: () => {
             reset();
+            onClose?.();
           },
         }
       );
@@ -134,7 +134,12 @@ function CreateCabinForm({ cabinToEdit = {} }) {
 
       <FormRow>
         {/* type is an HTML attribute! */}
-        <Button disabled={isWorking} variations="secondary" type="reset">
+        <Button
+          onClick={() => onClose?.()}
+          disabled={isWorking}
+          variations="secondary"
+          type="reset"
+        >
           Cancel
         </Button>
         <Button disabled={isWorking}>

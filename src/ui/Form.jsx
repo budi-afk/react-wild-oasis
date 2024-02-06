@@ -22,4 +22,8 @@ const Form = styled.form`
   font-size: 1.4rem;
 `;
 
+Form.defaultProps = {
+  type: "modal",
+};
+
 export default Form;
