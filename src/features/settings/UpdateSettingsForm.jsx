@@ -7,12 +7,6 @@ import { useForm } from "react-hook-form";
 
 function UpdateSettingsForm({ settings = {} }) {
   const { isUpdating, updateSetting } = useUpdateSetting();
-  const {
-    minBookingLength,
-    maxBookingLength,
-    maxGuestPerBooking,
-    breakfastPrice,
-  } = settings;
 
   const {
     register,
