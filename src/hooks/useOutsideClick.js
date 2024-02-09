@@ -11,7 +11,7 @@ export function useOutsideClick(handler, listenCapturing = true) {
         }
       }
 
-      // parameter ke 3 untuk mencegah bubble effect / capturing phase
+      // parameter ke 3 untuk mencegah event bubbling / capturing phase
       document.addEventListener("click", handleClick, listenCapturing);
 
       return () =>

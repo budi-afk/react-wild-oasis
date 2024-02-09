@@ -20,7 +20,7 @@ const StyledConfirmDelete = styled.div`
   }
 `;
 
-function ConfirmDelete({ resourceName, onConfirm, disabled }) {
+function ConfirmDelete({ resourceName, onConfirm, disabled, onClose }) {
   return (
     <StyledConfirmDelete>
       <Heading as="h3">Delete {resourceName}</Heading>
@@ -30,10 +30,11 @@ function ConfirmDelete({ resourceName, onConfirm, disabled }) {
       </p>
 
       <div>
-        <Button variation="secondary" disabled={disabled}>
+        {/* props onClose berasal dari cloneElemen Modal.Window */}
+        <Button variations="secondary" disabled={disabled} onClick={onClose}>
           Cancel
         </Button>
-        <Button variation="danger" disabled={disabled}>
+        <Button variations="danger" disabled={disabled} onClick={onConfirm}>
           Delete
         </Button>
       </div>
