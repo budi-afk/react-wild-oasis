@@ -17,6 +17,7 @@ import { useMoveBack } from "../../hooks/useMoveBack";
 import { useBooking } from "./useBooking";
 import { useCheckout } from "../check-in-out/useCheckoutjs";
 import { useDeleteBooking } from "./useDeleteBooking";
+import Empty from "../../ui/Empty";
 
 const HeadingGroup = styled.div`
   display: flex;
@@ -25,22 +26,22 @@ const HeadingGroup = styled.div`
 `;
 
 function BookingDetail() {
-  const { isLoading, data: booking = {} } = useBooking();
+  const { isLoading, data: booking } = useBooking();
   const { isDeleting, deleteBooking } = useDeleteBooking();
   const { isCheckingOut, checkout } = useCheckout();
   const navigate = useNavigate();
+  const moveBack = useMoveBack();
+
+  if (isLoading) return <Spinner />;
+  if (!booking) return <Empty resource="booking" />;
 
   const { id: bookingId, status } = booking;
-
-  const moveBack = useMoveBack();
 
   const statusToTagName = {
     unconfirmed: "blue",
     "checked-in": "green",
     "checked-out": "silver",
   };
-
-  if (isLoading) return <Spinner />;
 
   return (
     <>
